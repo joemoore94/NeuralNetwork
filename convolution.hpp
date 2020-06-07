@@ -14,8 +14,7 @@ private:
   int imgY;
   int conX;
   int conY;
-  int layIn;
-  int layOut;
+  int layers;
 
   std::vector<double> dummy;
   std::vector<std::vector<double> > dummy2d;
@@ -29,8 +28,7 @@ private:
   void intializeWeights();
 
 public:
-  CONVOLUTION(); // defualt constructor
-  CONVOLUTION(int batchSize, int imgX, int imgY, int conX, int conY, int layIn, int layOut);
+  CONVOLUTION(int batchSize, int imgX, int imgY, int conX, int conY, int layers);
 
   void feed(std::vector<std::vector<double> > input);
   void feed(std::vector<std::vector<std::vector<double> > > input);

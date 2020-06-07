@@ -1,19 +1,14 @@
 #include "convolution.hpp"
 
-CONVOLUTION::CONVOLUTION() // defualt constructor
-{
 
-}
-
-CONVOLUTION::CONVOLUTION(int BS, int imgX, int imgY, int conX, int conY, int layIn, int layOut)
+CONVOLUTION::CONVOLUTION(int BS, int imgX, int imgY, int conX, int conY, int layers)
 {
   this -> batchSize = BS;
   this -> imgX = imgX;
   this -> imgY = imgY;
   this -> conX = conX;
   this -> conY = conY;
-  this -> layIn = layIn;
-  this -> layOut = layOut;
+  this -> layers = layers;
 
   intializeBiases();
   intializeWeights();
@@ -25,7 +20,7 @@ void CONVOLUTION::intializeBiases()
   for(int i = 0; i < batchSize; i++)
   {
     dummy.clear();
-    for(int j = 0; j < layOut; j++)
+    for(int j = 0; j < layers; j++)
     {
       dummy.push_back(0);
     }
@@ -39,7 +34,7 @@ void CONVOLUTION::intializeWeights()
   for(int i = 0; i < batchSize; i++)
   {
     dummy2d.clear();
-    for(int j = 0; j < layOut; j++)
+    for(int j = 0; j < layers; j++)
     {
       dummy.clear();
       for(int k = 0; k < conX*conY; k++)
@@ -60,9 +55,9 @@ void CONVOLUTION::feed(std::vector<std::vector<double> > input)
   Zs.resize(batchSize);
   for(int i = 0; i < batchSize; i++)
   {
-    activations.at(i).resize(layOut);
-    Zs.at(i).resize(layOut);
-    for (int h = 0; h < layOut; h++)
+    activations.at(i).resize(layers);
+    Zs.at(i).resize(layers);
+    for (int h = 0; h < layers; h++)
     {
       for(int j = 0; j < imgY-conY+1; j++)
       {
@@ -93,9 +88,9 @@ void CONVOLUTION::feed(std::vector<std::vector<std::vector<double> > > input)
   Zs.resize(batchSize);
   for(int i = 0; i < batchSize; i++)
   {
-    activations.at(i).resize(layIn);
-    Zs.at(i).resize(layIn);
-    for (int h = 0; h < layIn; h++)
+    activations.at(i).resize(layers);
+    Zs.at(i).resize(layers);
+    for (int h = 0; h < layers; h++)
     {
       for(int j = 0; j < imgY-conY+1; j++)
       {
