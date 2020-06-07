@@ -1,5 +1,5 @@
 # NeuralNetwork
-A neural network using convolution, max pooling and ReLU function from scratch.  
+A neural network using convolution, max pooling and ReLU function from scratch (NNFS). 
 
 The program seeks to fully utilize object oriented programming for future costumization and tweaking.
 
