@@ -1,9 +1,9 @@
 #include "network.hpp"
 
-NETWORK::NETWORK(int batchSize, READFILE& r, CONVOLUTION& c1, MAXPOOL& m1, CONVOLUTION& c2)
-: rf(r), con1(c1), max1(m1), con2(c2)
+NETWORK::NETWORK(int BS, READFILE& r, CONVOLUTION& c1, MAXPOOL& m1, CONVOLUTION& c2, MAXPOOL& m2)
+: rf(r), con1(c1), max1(m1), con2(c2), max2(m2)
 {
-  this -> batchSize = batchSize;
+  this -> batchSize = BS;
   SDG();
 }
 
@@ -16,7 +16,9 @@ void NETWORK::SDG()
 void NETWORK::feedFoward()
 {
   con1.feed(X);
-  con2.feed(con1.getActivations());
+  max1.feed(con1.getActivations());
+  con2.feed(max1.getActivations());
+  max2.feed(con2.getActivations());
 
 }
 

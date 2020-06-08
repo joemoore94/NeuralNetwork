@@ -40,3 +40,8 @@ void MAXPOOL::feed(std::vector<std::vector<std::vector<double> > > input)
     activations.push_back(dummy2d);
   }
 }
+
+std::vector<std::vector<std::vector<double> > > MAXPOOL::getActivations() const
+{
+  return activations;
+}

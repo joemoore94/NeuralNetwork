@@ -26,7 +26,7 @@ void READFILE::importTrainData(std::string trainfile)
     for(int j=0; j<num_inputs; j++)
     {
       dataIn >> temp;
-      dummy.push_back(temp);
+      dummy.push_back(temp/255);
     }
     X_train.push_back(dummy);
   }

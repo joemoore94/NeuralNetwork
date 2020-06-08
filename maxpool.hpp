@@ -23,6 +23,7 @@ public:
   MAXPOOL(int BS, int imgX, int imgY, int poolX, int poolY, int layers);
 
   void feed(std::vector<std::vector<std::vector<double> > > input);
+  std::vector<std::vector<std::vector<double> > > getActivations() const;
 
 };
 #endif

@@ -28,12 +28,13 @@ private:
   CONVOLUTION& con1;
   MAXPOOL& max1;
   CONVOLUTION& con2;
+  MAXPOOL& max2;
 
   void print2dVectors(std::vector<std::vector<double> > vec);
   void print3dVectors(std::vector<std::vector<std::vector<double> > > vec);
 
 public:
-  NETWORK(int batchSize, READFILE& rf, CONVOLUTION& con1, MAXPOOL& max1, CONVOLUTION& con2);
+  NETWORK(int BS, READFILE& rf, CONVOLUTION& con1, MAXPOOL& max1, CONVOLUTION& con2, MAXPOOL& max2);
   void SDG();
 
 };
