@@ -1,7 +1,7 @@
 #include "network.hpp"
 
-NETWORK::NETWORK(int BS, READFILE& r, CONVOLUTION& c1, MAXPOOL& m1, CONVOLUTION& c2, MAXPOOL& m2)
-: rf(r), con1(c1), max1(m1), con2(c2), max2(m2)
+NETWORK::NETWORK(int BS, READFILE& r, CONVOLUTION& c1, MAXPOOL& m1, CONVOLUTION& c2, MAXPOOL& m2,
+  SIGMOID& s, SOFTMAX& sf) : rf(r), con1(c1), max1(m1), con2(c2), max2(m2), sig(s), sof(sf)
 {
   this -> batchSize = BS;
   SDG();
@@ -19,6 +19,9 @@ void NETWORK::feedFoward()
   max1.feed(con1.getActivations());
   con2.feed(max1.getActivations());
   max2.feed(con2.getActivations());
+  sig.feed(max2.getActivations());
+  sof.feed(sig.getActivations());
+  //print2dVectors(sig.getActivations());
 
 }
 
@@ -35,13 +38,6 @@ void NETWORK::getbatch()
   }
   //print2dVectors(X);
 }
-
-
-
-
-
-
-
 
 
 

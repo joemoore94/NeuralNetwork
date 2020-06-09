@@ -27,6 +27,7 @@ private:
 public:
   READFILE(); // default constructor
   READFILE(std::string trainfile, std::string testfile);
+  
   const std::vector<double> getXtrain(int i) const;
   const std::vector<double> getYtrain(int i) const;
   const std::vector<double> getXtest(int i) const;
