@@ -5,6 +5,10 @@
 #include <cstdlib>
 #include <iostream>
 
+using vec1 = std::vector<double>;
+using vec2 = std::vector<std::vector<double> >;
+using vec3 = std::vector<std::vector<std::vector<double> > >;
+
 class MAXPOOL
 {
 private:
@@ -15,15 +19,15 @@ private:
   int poolY;
   int layers;
 
-  std::vector<double> dummy;
-  std::vector<std::vector<double> > dummy2d;
-  std::vector<std::vector<std::vector<double> > > activations;
+  vec3 max_input;
+  vec3 activations;
 
 public:
   MAXPOOL(int BS, int imgX, int imgY, int poolX, int poolY, int layers);
 
-  void feed(std::vector<std::vector<std::vector<double> > > input);
-  std::vector<std::vector<std::vector<double> > > getActivations() const;
+  void feed(vec3 in);
 
+  const vec3 getActivations() const;
+  const vec3 getMaxInput() const;
 };
 #endif

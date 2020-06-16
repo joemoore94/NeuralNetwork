@@ -10,38 +10,53 @@ MAXPOOL::MAXPOOL(int BS, int imgX, int imgY, int poolX, int poolY, int layers)
   this -> layers = layers;
 }
 
-void MAXPOOL::feed(std::vector<std::vector<std::vector<double> > > input)
+void MAXPOOL::feed(vec3 in)
 {
   double temp, max;
+  int maxIndex;
+  max_input.resize(batchSize);
+  activations.resize(batchSize);
   for (int i = 0; i < batchSize; i++)
   {
-    dummy2d.clear();
+    max_input.at(i).resize(layers);
+    activations.at(i).resize(layers);
     for (int j = 0; j < layers; j++)
     {
-      dummy.clear();
+      max_input.at(i).at(j).resize(imgY*imgX);
+      activations.at(i).at(j).resize(imgY*imgX);
       for (int k = 0; k < imgY; k+=poolY)
       {
         for (int l = 0; l < imgX; l+=poolX)
         {
           max = 0;
+          maxIndex = 0;
           for (int m = 0; m < poolY; m++)
           {
             for (int n = 0; n < poolX; n++)
             {
-              temp = input.at(i).at(j).at(k*imgX + l + m*imgX + n);
-              if(temp > max) {max = temp;}
+              temp = in.at(i).at(j).at(k*imgX + l + m*imgX + n);
+              if(temp >= max)
+              {
+                max = temp;
+                maxIndex = k*imgX + l + m*imgX + n;
+              }
             }
           }
-          dummy.push_back(max);
+          max_input.at(i).at(j).at(maxIndex) = 1;
+          activations.at(i).at(j).at(k*imgY + l) = max;
         }
       }
-      dummy2d.push_back(dummy);
     }
-    activations.push_back(dummy2d);
   }
 }
 
-std::vector<std::vector<std::vector<double> > > MAXPOOL::getActivations() const
+
+const vec3 MAXPOOL::getActivations() const
 {
   return activations;
+}
+
+const vec3 MAXPOOL::getMaxInput() const
+{
+  return max_input;
 }

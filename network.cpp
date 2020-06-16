@@ -4,13 +4,16 @@ NETWORK::NETWORK(int BS, READFILE& r, CONVOLUTION& c1, MAXPOOL& m1, CONVOLUTION&
   SIGMOID& s, SOFTMAX& sf) : rf(r), con1(c1), max1(m1), con2(c2), max2(m2), sig(s), sof(sf)
 {
   this -> batchSize = BS;
-  SDG();
+  for(int i = 0; i < 5; i++) {SDG();}
+  print3dVectors(con1.getActivations());
+  //print2dVectors(Y);
 }
 
 void NETWORK::SDG()
 {
   getbatch();
   feedFoward();
+  backPropagation();
 }
 
 void NETWORK::feedFoward()
@@ -21,24 +24,52 @@ void NETWORK::feedFoward()
   max2.feed(con2.getActivations());
   sig.feed(max2.getActivations());
   sof.feed(sig.getActivations());
-  //print2dVectors(sig.getActivations());
-
+  //calculateCost(sof.getActivations());
 }
 
 void NETWORK::getbatch()
 {
-  std::default_random_engine gen;
+  typedef std::chrono::high_resolution_clock myclock;
+  myclock::time_point beginning = myclock::now();
+  myclock::duration d = myclock::now() - beginning;
+  unsigned seed = d.count();
+
+  std::default_random_engine gen(seed);
   std::uniform_int_distribution<int> dist(0, 60000);
   int n;
+  X.resize(batchSize);
+  Y.resize(batchSize);
   for (int i = 0; i < batchSize; i++)
   {
     n = dist(gen);
-    X.push_back(rf.getXtrain(n));
-    Y.push_back(rf.getYtrain(n));
+    X.at(i) = rf.getXtrain(n);
+    Y.at(i) = rf.getYtrain(n);
   }
-  //print2dVectors(X);
 }
 
+void NETWORK::calculateCost(vec2 in)
+{
+  double cost = 0;
+  for(int i = 0; i < batchSize; i++)
+  {
+    for(int j = 0; j < (int)in.at(i).size(); j++)
+    {
+      if(Y.at(i).at(j) == 1)
+      {
+        cost -= log(in.at(i).at(j));
+      }
+    }
+  }
+  this -> cost = cost;
+}
+
+void NETWORK::backPropagation()
+{
+  sof.backProp(Y, eta);
+  sig.backProp(sof.getDelta(), sof.getWeights(), eta);
+  con2.backPropM2S(sig.getDelta(), sig.getWeights(), max2.getMaxInput(), eta);
+  con1.backPropS2M(con2.getDelta(), con2.getWeights(), max1.getMaxInput(), eta);
+}
 
 
 
@@ -49,7 +80,17 @@ void NETWORK::getbatch()
 
 // --------------------------- print ------------------------------
 
-void NETWORK::print2dVectors(std::vector<std::vector<double> > vec)
+void NETWORK::print1dVectors(vec1 vec)
+{
+  std::cout << "[ ";
+  for(int i = 0; i < (int)(vec.size()); i++)
+  {
+    std::cout << vec.at(i) << " ";
+  }
+  std::cout << "]" << std::endl;
+}
+
+void NETWORK::print2dVectors(vec2 vec)
 {
   for(int j = 0; j < (int)(vec.size()); j++)
   {
@@ -62,7 +103,7 @@ void NETWORK::print2dVectors(std::vector<std::vector<double> > vec)
   }
 }
 
-void NETWORK::print3dVectors(std::vector<std::vector<std::vector<double> > > vec)
+void NETWORK::print3dVectors(vec3 vec)
 {
   for(int k = 0; k < (int)(vec.size()); k++)
   {

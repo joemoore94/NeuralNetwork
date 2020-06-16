@@ -12,58 +12,80 @@ SOFTMAX::SOFTMAX(int batchSize, int input, int output)
 
 void SOFTMAX::intializeWeights()
 {
-  weights.resize(batchSize);
-  for(int i = 0; i < batchSize; i++)
+  std::default_random_engine gen;
+  std::normal_distribution<double> dist(0.0,1.0);
+
+  weights.resize(output);
+  for(int i = 0; i < output; i++)
   {
-    weights.at(i).resize(output);
-    for(int j = 0; j < output; j++)
+    weights.at(i).resize(input);
+    for(int j = 0; j < input; j++)
     {
-      for(int k = 0; k < input; k++)
-      {
-        weights.at(i).at(j).push_back(0);
-      }
+      weights.at(i).at(j) = dist(gen);
     }
   }
 }
 
 void SOFTMAX::intializeBiases()
 {
-  biases.resize(batchSize);
-  for(int i = 0; i < batchSize; i++)
+  std::default_random_engine gen;
+  std::normal_distribution<double> dist(0.0,1.0);
+
+  biases.resize(output);
+  for(int i = 0; i < output; i++)
   {
-    for(int j = 0; j < output; j++)
-    {
-      biases.at(i).push_back(0);
-    }
+    biases.at(i) = dist(gen);
   }
 }
 
-void SOFTMAX::feed(std::vector<std::vector<double> > input)
+void SOFTMAX::feed(vec2 in)
 {
   double temp;
+  input_activations = in;
   Zs.resize(batchSize);
   for(int i = 0; i < batchSize; i++)
   {
+    Zs.at(i).resize(output);
     for(int j = 0; j < output; j++)
     {
       temp = 0;
-      for(int k = 0; k < this -> input; k++)
+      for(int k = 0; k < input; k++)
       {
-        temp += weights.at(i).at(j).at(k)*input.at(i).at(k);
+        temp += weights.at(j).at(k)*in.at(i).at(k);
       }
-      temp += biases.at(i).at(j);
-      Zs.at(i).push_back(temp);
+      temp += biases.at(j);
+      Zs.at(i).at(j) = temp;
     }
   }
   softmax(Zs);
 }
 
-void SOFTMAX::softmax(std::vector<std::vector<double> > Zs)
+void SOFTMAX::backProp(vec2 out, double eta)
+{
+  vec2& in = input_activations;
+  delta.resize(batchSize); // delta = dC/dZ for each neuron
+  for(int i = 0; i < batchSize; i++)
+  {
+    delta.at(i).resize(output);
+    for(int j = 0; j < output; j++)
+    {
+      delta.at(i).at(j) = (activations.at(i).at(j) - out.at(i).at(j));
+      biases.at(j) -= eta*delta.at(i).at(j)/batchSize;
+      for(int k = 0; k < input; k++)
+      {
+        weights.at(j).at(k) -= eta*in.at(i).at(k)*delta.at(i).at(j)/batchSize;
+      }
+    }
+  }
+}
+
+void SOFTMAX::softmax(vec2 Zs)
 {
   double temp;
   activations.resize(batchSize);
   for(int i = 0; i < batchSize; i++)
   {
+    activations.at(i).resize(output);
     for(int j = 0; j < output; j++)
     {
       temp = 0;
@@ -71,13 +93,33 @@ void SOFTMAX::softmax(std::vector<std::vector<double> > Zs)
       {
         temp += std::exp(Zs.at(i).at(k));
       }
-      temp = Zs.at(i).at(j) / temp;
-      activations.at(i).push_back(temp);
+      temp = std::exp(Zs.at(i).at(j)) / temp;
+      activations.at(i).at(j) = temp;
     }
   }
 }
 
-std::vector<std::vector<double> > SOFTMAX::getActivations() const
+const vec2 SOFTMAX::getActivations() const
 {
   return activations;
+}
+
+const vec2 SOFTMAX::getZs() const
+{
+  return Zs;
+}
+
+const vec1 SOFTMAX::getBiases() const
+{
+  return biases;
+}
+
+const vec2 SOFTMAX::getWeights() const
+{
+  return weights;
+}
+
+const vec2 SOFTMAX::getDelta() const
+{
+  return delta;
 }

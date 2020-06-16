@@ -8,23 +8,31 @@
 #include "softmax.hpp"
 #include <vector>
 #include <random>
+#include <chrono>
 #include <cstdlib>
 #include <iostream>
+#include <cmath>
+
+using vec1 = std::vector<double>;
+using vec2 = std::vector<std::vector<double> >;
+using vec3 = std::vector<std::vector<std::vector<double> > >;
 
 class NETWORK
 {
 private:
-  double eta = 0.0;
+  double eta = 1.0;
   double lambda = 0.0;
   int batchSize;
+  double cost;
 
-  std::vector<std::vector<double> > X;
-  std::vector<std::vector<double> > Y;
-  std::vector<std::vector<double> > biases;
-  std::vector<std::vector<std::vector<double> > > weights;
+  vec2 X;
+  vec2 Y;
 
+  void SDG();
   void feedFoward();
   void getbatch();
+  void calculateCost(vec2 in);
+  void backPropagation();
 
   READFILE& rf;
   CONVOLUTION& con1;
@@ -34,13 +42,13 @@ private:
   SIGMOID& sig;
   SOFTMAX& sof;
 
-  void print2dVectors(std::vector<std::vector<double> > vec);
-  void print3dVectors(std::vector<std::vector<std::vector<double> > > vec);
+  void print1dVectors(vec1 vec);
+  void print2dVectors(vec2 vec);
+  void print3dVectors(vec3 vec);
 
 public:
   NETWORK(int BS, READFILE& rf, CONVOLUTION& con1, MAXPOOL& max1, CONVOLUTION& con2,
-    MAXPOOL& max2, SIGMOID& sig, SOFTMAX& sof);
-  void SDG();
+     MAXPOOL& max2, SIGMOID& sig, SOFTMAX& sof);
 
 };
 #endif

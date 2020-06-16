@@ -7,6 +7,10 @@
 #include <random>
 #include <cmath>
 
+using vec1 = std::vector<double>;
+using vec2 = std::vector<std::vector<double> >;
+using vec3 = std::vector<std::vector<std::vector<double> > >;
+
 class SOFTMAX
 {
 private:
@@ -14,20 +18,29 @@ private:
   int input;
   int output;
 
-  std::vector<std::vector<double> > biases;
-  std::vector<std::vector<std::vector<double> > > weights;
-  std::vector<std::vector<double> > Zs;
-  std::vector<std::vector<double> > activations;
+  vec1 biases;
+  vec2 weights;
+  vec2 Zs;
+  vec2 activations;
+  vec2 input_activations;
+  vec2 delta;
 
   void intializeWeights();
   void intializeBiases();
-  void softmax(std::vector<std::vector<double> > Zs);
+  void softmax(vec2 Zs);
 
 public:
   SOFTMAX(int batchSize, int input, int output);
 
-  void feed(std::vector<std::vector<double> > input);
-  std::vector<std::vector<double> > getActivations() const;
+  void feed(vec2 in);
+  void backProp(vec2 out, double eta);
+
+
+  const vec2 getActivations() const;
+  const vec2 getZs() const;
+  const vec1 getBiases() const;
+  const vec2 getWeights() const;
+  const vec2 getDelta() const;
 
 };
 #endif

@@ -7,6 +7,10 @@
 #include <random>
 #include <cmath>
 
+using vec1 = std::vector<double>;
+using vec2 = std::vector<std::vector<double> >;
+using vec3 = std::vector<std::vector<std::vector<double> > >;
+
 class SIGMOID
 {
 private:
@@ -16,20 +20,27 @@ private:
   int output;
   int layers;
 
-  std::vector<std::vector<double> > biases;
-  std::vector<std::vector<std::vector<std::vector<double> > > > weights;
-  std::vector<std::vector<double> > Zs;
-  std::vector<std::vector<double> > activations;
+  vec1 biases;
+  vec3 weights;
+  vec2 Zs;
+  vec2 activations;
+  vec3 input_activations;
+  vec2 delta;
 
   double sigmoid(double z);
+  double sigPrime(double z);
   void intializeBiases();
   void intializeWeights();
 
 public:
   SIGMOID(int batchSize, int imgX, int imgY, int output, int layers);
 
-  void feed(std::vector<std::vector<std::vector<double> > > input);
-  std::vector<std::vector<double> > getActivations() const;
+  void feed(vec3 in);
+  void backProp(vec2 d, vec2 w, double eta);
+
+  const vec2 getActivations() const;
+  const vec2 getDelta() const;
+  const vec3 getWeights() const;
 
 };
 #endif
