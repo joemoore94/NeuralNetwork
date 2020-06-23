@@ -1,5 +1,7 @@
 #include "convolution.hpp"
 
+CONVOLUTION::CONVOLUTION() {}
+
 CONVOLUTION::CONVOLUTION(int BS, int imgX, int imgY, int conX, int conY, int layers)
 {
   this -> batchSize = BS;

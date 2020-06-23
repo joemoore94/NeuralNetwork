@@ -1,9 +1,25 @@
 #include "network.hpp"
 
-NETWORK::NETWORK(int BS, READFILE& r, CONVOLUTION& c1, MAXPOOL& m1, CONVOLUTION& c2, MAXPOOL& m2,
-  SIGMOID& s, SOFTMAX& sf) : rf(r), con1(c1), max1(m1), con2(c2), max2(m2), sig(s), sof(sf)
+NETWORK::NETWORK() {}
+
+NETWORK::NETWORK(int batchSize)
 {
-  this -> batchSize = BS;
+  this -> batchSize = batchSize;
+
+  CONVOLUTION con1(batchSize,28,28,5,5,20);  // (batchSize,imgX,imgY,conX,conY,layers)
+  MAXPOOL max1(batchSize,24,24,2,2,20);  // (batchSize,imgX,imgY,poolX,poolY,layers)
+  CONVOLUTION con2(batchSize,12,12,5,5,20); // (batchSize,imgX,imgY,conX,conY,layers)
+  MAXPOOL max2(batchSize,8,8,2,2,20); // (batchSize,imgX,imgY,poolX,poolY,layers)
+  SIGMOID sig(batchSize,4,4,100,20); // (batchSize,imgX,imgY,output,layers) **fully connected layer**
+  SOFTMAX sof(batchSize,100,10); // (batchSize,input,output)
+
+  this -> con1 = con1;
+  this -> max1 = max1;
+  this -> con2 = con2;
+  this -> max2 = max2;
+  this -> sig = sig;
+  this -> sof = sof;
+
   for(int i = 0; i < 5; i++) {SDG();}
   print3dVectors(con1.getActivations());
   //print2dVectors(Y);

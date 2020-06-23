@@ -20,9 +20,9 @@ using vec3 = std::vector<std::vector<std::vector<double> > >;
 class NETWORK
 {
 private:
+  int batchSize = 10;
   double eta = 1.0;
   double lambda = 0.0;
-  int batchSize;
   double cost;
 
   vec2 X;
@@ -34,21 +34,21 @@ private:
   void calculateCost(vec2 in);
   void backPropagation();
 
-  READFILE& rf;
-  CONVOLUTION& con1;
-  MAXPOOL& max1;
-  CONVOLUTION& con2;
-  MAXPOOL& max2;
-  SIGMOID& sig;
-  SOFTMAX& sof;
-
+  READFILE rf;
+  CONVOLUTION con1;
+  MAXPOOL max1;
+  CONVOLUTION con2;
+  MAXPOOL max2;
+  SIGMOID sig;
+  SOFTMAX sof;
+  
   void print1dVectors(vec1 vec);
   void print2dVectors(vec2 vec);
   void print3dVectors(vec3 vec);
 
 public:
-  NETWORK(int BS, READFILE& rf, CONVOLUTION& con1, MAXPOOL& max1, CONVOLUTION& con2,
-     MAXPOOL& max2, SIGMOID& sig, SOFTMAX& sof);
+  NETWORK();
+  NETWORK(int batchSize);
 
 };
 #endif

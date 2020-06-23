@@ -1,5 +1,7 @@
 #include "softmax.hpp"
 
+SOFTMAX::SOFTMAX() {}
+
 SOFTMAX::SOFTMAX(int batchSize, int input, int output)
 {
   this -> batchSize = batchSize;

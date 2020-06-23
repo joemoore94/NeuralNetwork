@@ -33,6 +33,7 @@ private:
   void intializeWeights();
 
 public:
+  SIGMOID();
   SIGMOID(int batchSize, int imgX, int imgY, int output, int layers);
 
   void feed(vec3 in);

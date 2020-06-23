@@ -23,6 +23,7 @@ private:
   vec3 activations;
 
 public:
+  MAXPOOL();
   MAXPOOL(int BS, int imgX, int imgY, int poolX, int poolY, int layers);
 
   void feed(vec3 in);

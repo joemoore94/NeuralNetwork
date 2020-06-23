@@ -1,5 +1,7 @@
 #include "maxpool.hpp"
 
+MAXPOOL::MAXPOOL() {}
+
 MAXPOOL::MAXPOOL(int BS, int imgX, int imgY, int poolX, int poolY, int layers)
 {
   this -> batchSize = BS;

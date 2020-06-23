@@ -30,6 +30,7 @@ private:
   void softmax(vec2 Zs);
 
 public:
+  SOFTMAX();
   SOFTMAX(int batchSize, int input, int output);
 
   void feed(vec2 in);

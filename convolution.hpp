@@ -35,6 +35,7 @@ private:
   void intializeWeights();
 
 public:
+  CONVOLUTION();
   CONVOLUTION(int batchSize, int imgX, int imgY, int conX, int conY, int layers);
 
   void feed(vec2 in);

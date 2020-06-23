@@ -1,5 +1,7 @@
 #include "sigmoid.hpp"
 
+SIGMOID::SIGMOID() {}
+
 SIGMOID::SIGMOID(int batchSize, int imgX, int imgY, int output, int layers)
 {
   this -> batchSize = batchSize;
