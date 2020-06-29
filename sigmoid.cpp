@@ -2,98 +2,102 @@
 
 SIGMOID::SIGMOID() {}
 
-SIGMOID::SIGMOID(int batchSize, int imgX, int imgY, int output, int layers)
+SIGMOID::SIGMOID(int batchSize, int input, int output)
 {
   this -> batchSize = batchSize;
-  this -> imgX = imgX;
-  this -> imgY = imgY;
+  this -> input = input;
   this -> output = output;
-  this -> layers = layers;
 
-  intializeWeights();
-  intializeBiases();
+  intializeWs();
+  intializeBs();
 }
 
-void SIGMOID::intializeBiases()
+void SIGMOID::intializeBs()
 {
-  std::default_random_engine gen;
-  std::normal_distribution<double> dist(0.0,1.0);
+  typedef std::chrono::high_resolution_clock myclock;
+  myclock::time_point beginning = myclock::now();
+  myclock::duration d = myclock::now() - beginning;
+  unsigned seed = d.count();
 
-  for (int j = 0; j < output; j++)
+  std::default_random_engine gen(seed);
+  std::normal_distribution<double> dist(0.0,1.0);
+  int n;
+
+  Bs.resize(output);
+  for (int i = 0; i < output; i++)
   {
-    biases.push_back(dist(gen));
+    n = dist(gen);
+    Bs.at(i) = n;
   }
 }
 
-void SIGMOID::intializeWeights()
+void SIGMOID::intializeWs()
 {
-  std::default_random_engine gen;
-  std::normal_distribution<double> dist(0.0,1.0);
+  typedef std::chrono::high_resolution_clock myclock;
+  myclock::time_point beginning = myclock::now();
+  myclock::duration d = myclock::now() - beginning;
+  unsigned seed = d.count();
 
-  weights.resize(output);
-  for(int h = 0; h < output; h++)
+  std::default_random_engine gen(seed);
+  std::normal_distribution<double> dist(0.0,1.0);
+  int n;
+
+  Ws.resize(output);
+  for(int i = 0; i < output; i++)
   {
-    weights.at(h).resize(layers);
-    for (int j = 0; j < layers; j++)
+    Ws.at(i).resize(input);
+    for(int j = 0; j < input; j++)
     {
-      for (int k = 0; k < imgX*imgY; k++)
-      {
-        weights.at(h).at(j).push_back(dist(gen));
-      }
+      n = dist(gen);
+      Ws.at(i).at(j) = n;
     }
   }
 }
 
 
-void SIGMOID::feed(vec3 in)
+void SIGMOID::feed(vec2 in)
 {
-  input_activations = in;
+  inputAs = in;
   double temp;
   Zs.resize(batchSize);
-  activations.resize(batchSize);
+  As.resize(batchSize);
   for (int i = 0; i < batchSize; i++)
   {
     Zs.at(i).resize(output);
-    activations.at(i).resize(output);
+    As.at(i).resize(output);
     for (int j = 0; j < output; j++)
     {
       temp = 0;
-      for(int h = 0; h < layers; h++)
+      for (int k = 0; k < input; k++)
       {
-        for (int k = 0; k < imgX*imgY; k++)
-        {
-          temp += weights.at(j).at(h).at(k)*in.at(i).at(h).at(k);
-        }
+        temp += Ws.at(j).at(k)*in.at(i).at(k);
       }
-      temp += biases.at(j);
+      temp += Bs.at(j);
       Zs.at(i).at(j) = temp;
-      activations.at(i).at(j) = sigmoid(temp);
+      As.at(i).at(j) = sigmoid(temp);
     }
   }
 }
 
 void SIGMOID::backProp(vec2 d, vec2 w, double eta)
 {
-  vec3& a = input_activations;
-  // a is the previous activations, d is the preceding deltas and w is the preceding weights
-  delta.resize(batchSize);
+  int nextOutput = (int)w.size();
+  // inputAs is the previous activations, d is the preceding deltas and w is the preceding weights
+  Ds.resize(batchSize);
   for(int i = 0; i < batchSize; i++)
   {
-    delta.at(i).resize(output);
+    Ds.at(i).resize(output);
     for(int j = 0; j < output; j++)
     {
-      for(int k = 0; k < (int)d.at(i).size(); k++)
+      for(int k = 0; k < nextOutput; k++)
       {
-        delta.at(i).at(j) += w.at(k).at(j)*d.at(i).at(k);
+        Ds.at(i).at(j) += w.at(k).at(j)*d.at(i).at(k);
       }
-      delta.at(i).at(j) *= sigPrime(Zs.at(i).at(j));
-      biases.at(j) -= eta*delta.at(i).at(j)/batchSize;
-      for(int l = 0; l < layers; l++)
+      Ds.at(i).at(j) *= sigPrime(Zs.at(i).at(j));
+      Bs.at(j) -= eta*Ds.at(i).at(j)/batchSize;
+      for(int m = 0; m < input; m++)
       {
-        for(int m = 0; m < imgX*imgY; m++)
-        {
-          weights.at(j).at(l).at(m) -= eta*delta.at(i).at(j)*a.at(i).at(l).at(m)/batchSize;
-        }
+        Ws.at(j).at(m) -= eta*Ds.at(i).at(j)*inputAs.at(i).at(m)/batchSize;
       }
     }
   }
@@ -109,17 +113,17 @@ double SIGMOID::sigPrime(double z)
   return sigmoid(z)*(1-sigmoid(z));
 }
 
-const vec2 SIGMOID::getActivations() const
+const vec2 SIGMOID::getAs() const
 {
-  return activations;
+  return As;
 }
 
-const vec2 SIGMOID::getDelta() const
+const vec2 SIGMOID::getDs() const
 {
-  return delta;
+  return Ds;
 }
 
-const vec3 SIGMOID::getWeights() const
+const vec2 SIGMOID::getWs() const
 {
-  return weights;
+  return Ws;
 }

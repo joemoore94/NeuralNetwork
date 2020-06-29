@@ -68,6 +68,7 @@ std::vector<double> READFILE::vectorize(int num)
   return dummy;
 }
 
+const int READFILE::getNumTest() const {return num_test_sets;}
 const std::vector<double> READFILE::getXtrain(int i) const {return X_train.at(i);}
 const std::vector<double> READFILE::getYtrain(int i) const {return Y_train.at(i);}
 const std::vector<double> READFILE::getXtest(int i) const {return X_test.at(i);}

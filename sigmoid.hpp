@@ -4,8 +4,9 @@
 #include <vector>
 #include <cstdlib>
 #include <iostream>
-#include <random>
 #include <cmath>
+#include <chrono>
+#include <random>
 
 using vec1 = std::vector<double>;
 using vec2 = std::vector<std::vector<double> >;
@@ -15,33 +16,31 @@ class SIGMOID
 {
 private:
   int batchSize;
-  int imgX;
-  int imgY;
   int output;
-  int layers;
+  int input;
 
-  vec1 biases;
-  vec3 weights;
+  vec1 Bs;
+  vec2 Ws;
+  vec2 Ds;
   vec2 Zs;
-  vec2 activations;
-  vec3 input_activations;
-  vec2 delta;
+  vec2 As;
+  vec2 inputAs;
 
   double sigmoid(double z);
   double sigPrime(double z);
-  void intializeBiases();
-  void intializeWeights();
+  void intializeBs();
+  void intializeWs();
 
 public:
   SIGMOID();
-  SIGMOID(int batchSize, int imgX, int imgY, int output, int layers);
+  SIGMOID(int batchSize, int input, int output);
 
-  void feed(vec3 in);
+  void feed(vec2 in);
   void backProp(vec2 d, vec2 w, double eta);
 
-  const vec2 getActivations() const;
-  const vec2 getDelta() const;
-  const vec3 getWeights() const;
+  const vec2 getAs() const;
+  const vec2 getDs() const;
+  const vec2 getWs() const;
 
 };
 #endif

@@ -4,7 +4,6 @@
 #include <vector>
 #include <cstdlib>
 #include <iostream>
-#include <random>
 #include <cmath>
 
 using vec1 = std::vector<double>;
@@ -18,15 +17,15 @@ private:
   int input;
   int output;
 
-  vec1 biases;
-  vec2 weights;
+  vec1 Bs;
+  vec2 Ws;
+  vec2 Ds;
   vec2 Zs;
-  vec2 activations;
-  vec2 input_activations;
-  vec2 delta;
+  vec2 As;
+  vec2 inputAs;
 
-  void intializeWeights();
-  void intializeBiases();
+  void intializeWs();
+  void intializeBs();
   void softmax(vec2 Zs);
 
 public:
@@ -37,11 +36,11 @@ public:
   void backProp(vec2 out, double eta);
 
 
-  const vec2 getActivations() const;
+  const vec2 getAs() const;
   const vec2 getZs() const;
-  const vec1 getBiases() const;
-  const vec2 getWeights() const;
-  const vec2 getDelta() const;
+  const vec1 getBs() const;
+  const vec2 getWs() const;
+  const vec2 getDs() const;
 
 };
 #endif
