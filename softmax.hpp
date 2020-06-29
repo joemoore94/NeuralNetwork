@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <iostream>
 #include <cmath>
+#include <chrono>
+#include <random>
 
 using vec1 = std::vector<double>;
 using vec2 = std::vector<std::vector<double> >;

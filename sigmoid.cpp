@@ -23,6 +23,9 @@ void SIGMOID::intializeBs()
   std::normal_distribution<double> dist(0.0,1.0);
   int n;
 
+  std::random_device rd;
+  std::mt19937 mt(rd());
+
   Bs.resize(output);
   for (int i = 0; i < output; i++)
   {
@@ -41,6 +44,9 @@ void SIGMOID::intializeWs()
   std::default_random_engine gen(seed);
   std::normal_distribution<double> dist(0.0,1.0);
   int n;
+
+  std::random_device rd;
+  std::mt19937 mt(rd());
 
   Ws.resize(output);
   for(int i = 0; i < output; i++)

@@ -5,6 +5,6 @@
 
 int main(int argc, char** argv)
 {
-  NETWORK net(10); // (batchSize )
+  NETWORK net(20, 0.1); // (batchSize, eta )
   return EXIT_SUCCESS;
 }

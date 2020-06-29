@@ -19,7 +19,7 @@ class NETWORK
 {
 private:
   int batchSize;
-  double eta = 1.0;
+  double eta;
   double lambda = 0.0;
   double cost;
 
@@ -34,7 +34,8 @@ private:
   void test();
 
   READFILE rf;
-  SIGMOID sig;
+  SIGMOID sig1;
+  SIGMOID sig2;
   SOFTMAX sof;
 
   void print1dVectors(vec1 vec);
@@ -43,7 +44,7 @@ private:
 
 public:
   NETWORK();
-  NETWORK(int batchSize);
+  NETWORK(int batchSize, double eta);
 
 };
 #endif

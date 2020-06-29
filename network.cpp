@@ -2,38 +2,31 @@
 
 NETWORK::NETWORK() {}
 
-NETWORK::NETWORK(int batchSize)
+NETWORK::NETWORK(int batchSize, double eta)
 {
   this -> batchSize = batchSize;
+  this -> eta = eta;
 
   // (batchSize,input,output)
-  SIGMOID sig(batchSize,784,100);
-  this -> sig = sig;
+  SIGMOID sig1(batchSize,784,100);
+  this -> sig1 = sig1;
+  // (batchSize,input,output)
+  SIGMOID sig2(batchSize,100,100);
+  this -> sig2 = sig2;
   // (batchSize,input,output)
   SOFTMAX sof(batchSize,100,10);
   this -> sof = sof;
 
-  for(int i = 0; i < 100; i++)
+  for(int i = 0; i < 20; i++)
   {
-    SDG();
+    for(int j = 0; j < 100; j++)
+    {
+      SDG();
+    }
+    std::cout << i << ": ";
+    test();
   }
-  test();
 
-
-  // std::cout << "sig weights" << '\n';
-  // print2dVectors(this -> sig.getWs());
-  // std::cout << "sig deltas" << '\n';
-  // print2dVectors(this -> sig.getDs());
-  // std::cout << "sig activations" << '\n';
-  // print2dVectors(this -> sig.getAs());
-  // std::cout << "sof weights" << '\n';
-  // print2dVectors(this -> sof.getWs());
-  // std::cout << "sof deltas" << '\n';
-  // print2dVectors(this -> sof.getDs());
-  // std::cout << "sof activations" << '\n';
-  // print2dVectors(this -> sof.getAs());
-  // std::cout << "Y activations" << '\n';
-  // print2dVectors(Y);
 }
 
 void NETWORK::SDG()
@@ -45,22 +38,23 @@ void NETWORK::SDG()
 
 void NETWORK::feedFoward()
 {
-  sig.feed(X);
-  sof.feed(sig.getAs());
-  //print2dVectors(sig.getAs());
-  //print2dVectors(sof.getAs());
+  sig1.feed(X);
+  sig2.feed(sig1.getAs());
+  sof.feed(sig2.getAs());
 }
 
 void NETWORK::backPropagation()
 {
   sof.backProp(Y, eta);
-  sig.backProp(sof.getDs(), sof.getWs(), eta);
+  sig2.backProp(sof.getDs(), sof.getWs(), eta);
+  sig1.backProp(sig2.getDs(), sig2.getWs(), eta);
 }
 
 void NETWORK::test()
 {
   int numRight = 0;
-  for(int i = 0; i < rf.getNumTest(); i += batchSize)
+  int numTest = rf.getNumTest();
+  for(int i = 0; i < numTest; i += batchSize)
   {
     for(int j = 0; j < batchSize; j++)
     {
@@ -79,7 +73,7 @@ void NETWORK::test()
       }
     }
   }
-  std::cout << numRight << "/" << rf.getNumTest() << '\n';
+  std::cout << numRight << "/" << numTest << '\n';
 }
 
 void NETWORK::getbatch()
