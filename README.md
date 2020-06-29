@@ -1,5 +1,5 @@
 # NeuralNetwork
-A neural network using convolution, max pooling and ReLU function from scratch (NNFS). 
+A neural network from scratch (NNFS) using sigmoid layers and softmax cost function.
 
 The program seeks to fully utilize object oriented programming for future costumization and tweaking.
 
