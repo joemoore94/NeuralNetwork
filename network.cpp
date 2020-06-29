@@ -7,32 +7,33 @@ NETWORK::NETWORK(int batchSize)
   this -> batchSize = batchSize;
 
   // (batchSize,input,output)
-  SIGMOID sig(batchSize,784,10);
+  SIGMOID sig(batchSize,784,100);
   this -> sig = sig;
   // (batchSize,input,output)
-  SOFTMAX sof(batchSize,10,10);
+  SOFTMAX sof(batchSize,100,10);
   this -> sof = sof;
 
-  for(int i = 0; i < 2; i++)
+  for(int i = 0; i < 100; i++)
   {
     SDG();
-    //test();
   }
+  test();
 
-  std::cout << "sig weights" << '\n';
-  print2dVectors(this -> sig.getWs());
-  std::cout << "sig deltas" << '\n';
-  print2dVectors(this -> sig.getDs());
-  std::cout << "sig activations" << '\n';
-  print2dVectors(this -> sig.getAs());
-  std::cout << "sof weights" << '\n';
-  print2dVectors(this -> sof.getWs());
-  std::cout << "sof deltas" << '\n';
-  print2dVectors(this -> sof.getDs());
-  std::cout << "sof activations" << '\n';
-  print2dVectors(this -> sof.getAs());
-  std::cout << "Y activations" << '\n';
-  print2dVectors(Y);
+
+  // std::cout << "sig weights" << '\n';
+  // print2dVectors(this -> sig.getWs());
+  // std::cout << "sig deltas" << '\n';
+  // print2dVectors(this -> sig.getDs());
+  // std::cout << "sig activations" << '\n';
+  // print2dVectors(this -> sig.getAs());
+  // std::cout << "sof weights" << '\n';
+  // print2dVectors(this -> sof.getWs());
+  // std::cout << "sof deltas" << '\n';
+  // print2dVectors(this -> sof.getDs());
+  // std::cout << "sof activations" << '\n';
+  // print2dVectors(this -> sof.getAs());
+  // std::cout << "Y activations" << '\n';
+  // print2dVectors(Y);
 }
 
 void NETWORK::SDG()
