@@ -14,37 +14,24 @@ SIGMOID::SIGMOID(int batchSize, int input, int output)
 
 void SIGMOID::intializeBs()
 {
-  typedef std::chrono::high_resolution_clock myclock;
-  myclock::time_point beginning = myclock::now();
-  myclock::duration d = myclock::now() - beginning;
-  unsigned seed = d.count();
-
-  std::default_random_engine gen(seed);
+  double n;
   std::normal_distribution<double> dist(0.0,1.0);
-  int n;
-
   std::random_device rd;
   std::mt19937 mt(rd());
 
   Bs.resize(output);
   for (int i = 0; i < output; i++)
   {
-    n = dist(gen);
+    n = dist(mt);
     Bs.at(i) = n;
   }
 }
 
 void SIGMOID::intializeWs()
 {
-  typedef std::chrono::high_resolution_clock myclock;
-  myclock::time_point beginning = myclock::now();
-  myclock::duration d = myclock::now() - beginning;
-  unsigned seed = d.count();
 
-  std::default_random_engine gen(seed);
+  double n;
   std::normal_distribution<double> dist(0.0,1.0);
-  int n;
-
   std::random_device rd;
   std::mt19937 mt(rd());
 
@@ -54,7 +41,7 @@ void SIGMOID::intializeWs()
     Ws.at(i).resize(input);
     for(int j = 0; j < input; j++)
     {
-      n = dist(gen);
+      n = dist(mt);
       Ws.at(i).at(j) = n;
     }
   }

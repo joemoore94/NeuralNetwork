@@ -19,7 +19,7 @@ NETWORK::NETWORK(int batchSize, double eta)
 
   for(int i = 0; i < 20; i++)
   {
-    for(int j = 0; j < 100; j++)
+    for(int j = 0; j < 1000; j++)
     {
       SDG();
     }
@@ -78,22 +78,18 @@ void NETWORK::test()
 
 void NETWORK::getbatch()
 {
-  typedef std::chrono::high_resolution_clock myclock;
-  myclock::time_point beginning = myclock::now();
-  myclock::duration d = myclock::now() - beginning;
-  unsigned seed = d.count();
-
-  std::default_random_engine gen(seed);
   std::uniform_int_distribution<int> dist(0, 60000);
+  std::random_device rd;
+  std::mt19937 mt(rd());
   int n;
   X.resize(batchSize);
   Y.resize(batchSize);
   for (int i = 0; i < batchSize; i++)
   {
-    n = dist(gen);
+    n = dist(mt);
     X.at(i) = rf.getXtrain(n);
     Y.at(i) = rf.getYtrain(n);
-    //std::cout << n << '\n';
+    std::cout << n << '\n';
   }
 }
 

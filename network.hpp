@@ -6,7 +6,6 @@
 #include "softmax.hpp"
 #include <vector>
 #include <random>
-#include <chrono>
 #include <cstdlib>
 #include <iostream>
 #include <cmath>
